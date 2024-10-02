@@ -1,0 +1,15 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- @formatter:off -->
+            <pattern>
+                %gray(%d{YYYY-MM-dd HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %cyan(%logger{36}) - %highlight(%msg) %n
+            </pattern>
+            <!-- @formatter:on -->
+        </encoder>
+    </appender>
+    <root level="trace">
+        <appender-ref ref="STDOUT" />
+    </root>
+    <logger name="io.netty" level="INFO" />
+</configuration>

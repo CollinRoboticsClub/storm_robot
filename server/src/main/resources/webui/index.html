@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<script src="joy.js"></script>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Chess_-_Bot</title>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+
+<body onload="setHref()">
+<div class="row">
+    <div id="joystickRobotPosition" class="joystick">
+        <p class="joystickLabel">Robot Position</p>
+    </div>
+    <div class="">
+        <!-- src for this is set via JS because server is on the same host, but different port -->
+        <img id="webcamStream" class="videoStream"
+             src="/video" alt="Robot POV live-stream"
+             width="640" height="360"/>
+    </div>
+    <div id="joystickRobotRotation" class="joystick">
+        <p class="joystickLabel">Robot Rotation</p>
+    </div>
+</div>
+<div class="row">
+    <div id="joystickArmBaseShoulder" class="joystick">
+        <p class="joystickLabel">Arm Base/Shoulder</p>
+    </div>
+    <div id="joystickArmElbowWrist" class="joystick">
+        <p class="joystickLabel">Arm Elbow/Wrist</p>
+    </div>
+    <div id="joystickArmGripper" class="joystick">
+        <p class="joystickLabel">Arm Gripper</p>
+    </div>
+</div>
+
+</body>
+<script src="script.js"></script>
+</html>

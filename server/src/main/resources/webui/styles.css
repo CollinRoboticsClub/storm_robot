@@ -1,0 +1,48 @@
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.joystick {
+    width: 250px;
+    height: 250px;
+    margin: 25px 50px; /* top/bottom | left/right */
+}
+
+.joystickLabel {
+    text-align: center;
+    margin: 0;
+}
+
+.videoStream {
+    margin: 50px; /* top/bottom */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+}
+
+/* Light mode */
+:root {
+    --body-bg-color: #EEE;
+    --body-color: #444;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --body-bg-color: #1A1A1A;
+        --body-color: #CCC;
+    }
+}
+
+body {
+    /* Font/Text */
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: center;
+
+    /* Colors */
+    background: var(--body-bg-color);
+    color: var(--body-color);
+}
