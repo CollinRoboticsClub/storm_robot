@@ -1,7 +1,7 @@
 package me.arianb.storm_robot
 
 data object SERVER {
-    const val HOST = "192.168.203.1"
+    const val HOST = "localhost"
     const val PORT = 8080
 
     const val PING_PERIOD_MILLIS: Long = 15_000
