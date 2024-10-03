@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
@@ -36,30 +36,37 @@ fun SettingsDialog(onDismissRequest: () -> Unit, settingsViewModel: SettingsView
         Card(
             modifier = Modifier
                 .animateContentSize()
-                .fillMaxWidth()
-                .height(375.dp)
+                .wrapContentSize()
                 .padding(PaddingNormal),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
                 modifier = Modifier.padding(PaddingNormal),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
                 var serverIPString by remember { mutableStateOf(settings.serverIP) }
+                var serverPort by remember { mutableStateOf(settings.serverPort.toString()) }
                 TextField(
                     value = serverIPString,
                     label = { Text("Server IP") },
                     onValueChange = { serverIPString = it },
                 )
+                TextField(
+                    value = serverPort,
+                    label = { Text("Server Port") },
+                    onValueChange = { serverPort = it },
+                )
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(
                         onClick = {
                             settingsViewModel.userPreferencesFlow.update {
                                 UserPreferences(
-                                    serverIP = serverIPString
+                                    serverIP = serverIPString,
+                                    serverPort = serverPort.toInt()
                                 )
                             }
                             onDismissRequest()
