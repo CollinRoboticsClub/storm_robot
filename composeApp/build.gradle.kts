@@ -16,10 +16,8 @@ kotlin {
 //        binaries.executable()
 //    }
 
-
     sourceSets {
         val desktopMain by getting
-        val androidMain by getting
 //        val webMain by getting
 
         commonMain.dependencies {
