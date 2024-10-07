@@ -23,12 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.flow.update
 import me.arianb.storm_robot.theme.PaddingNormal
 
 @Composable
-fun SettingsDialog(onDismissRequest: () -> Unit, settingsViewModel: SettingsViewModel = viewModel()) {
-    val settings by settingsViewModel.userPreferencesFlow.collectAsState()
+fun SettingsDialog(
+    onDismissRequest: () -> Unit,
+    settingsViewModel: SettingsViewModel = viewModel()
+) {
+    val settings by settingsViewModel.userPreferences.collectAsState()
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -45,7 +47,7 @@ fun SettingsDialog(onDismissRequest: () -> Unit, settingsViewModel: SettingsView
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
-                var serverIPString by remember { mutableStateOf(settings.serverIP) }
+                var serverIPString by remember { mutableStateOf(settings.serverHost) }
                 var serverPort by remember { mutableStateOf(settings.serverPort.toString()) }
                 TextField(
                     value = serverIPString,
@@ -63,11 +65,9 @@ fun SettingsDialog(onDismissRequest: () -> Unit, settingsViewModel: SettingsView
                 ) {
                     TextButton(
                         onClick = {
-                            settingsViewModel.userPreferencesFlow.update {
-                                UserPreferences(
-                                    serverIP = serverIPString,
-                                    serverPort = serverPort.toInt()
-                                )
+                            with(settingsViewModel) {
+                                setServerHost(serverIPString)
+                                setServerPort(serverPort.toInt())
                             }
                             onDismissRequest()
                         }

@@ -1,4 +1,4 @@
-package me.arianb.storm_robot
+package me.arianb.storm_robot.dashboard.cameraFeed
 
 import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.ImageBitmap

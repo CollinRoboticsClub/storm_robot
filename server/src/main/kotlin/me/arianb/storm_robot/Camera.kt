@@ -24,12 +24,10 @@ const val FRAME_FORMAT = "jpeg"
 fun Route.cameraRoutes() {
     webSocket {
         withContext(Dispatchers.IO) {
-            val webcam = getWebcam()
-
             try {
-//                var counter = 0
-                webcam?.open() ?: throw Throwable("failed to open webcam :(")
+                val webcam: Webcam = WebcamConnection.getWebcam()
 
+//                var counter = 0
                 while (true) {
 //                    val thisFrame = FrameGeneration.getFrame(counter)
                     val thisFrame = WebcamUtils.getImageBytes(webcam, FRAME_FORMAT)
@@ -55,24 +53,59 @@ fun Route.cameraRoutes() {
                 application.log.error(e)
             } finally {
                 close()
-                webcam?.close()
+                WebcamConnection.closeWebcam()
             }
         }
     }
 }
 
-fun getWebcam(): Webcam? {
-    val webcam = Webcam.getDefault()?.apply {
-        val newDimension = Dimension(CAMERA.RESOLUTION_WIDTH, CAMERA.RESOLUTION_HEIGHT)
-        setCustomViewSizes(newDimension)
-        viewSize = newDimension
+// NOTE: Because i'm lazy, the refcount logic requires that the user ALWAYS calls closeWebcam() exactly once per call
+//       to getWebcam(), regardless of whether or not the getWebcam() call throws an exception.
+object WebcamConnection {
+    private var webcam: Webcam? = null
+    private var refcount = 0
+
+    fun getWebcam(): Webcam {
+        refcount++
+
+        // Captured reference to avoid mutability issues
+        val thisWebcam = webcam
+        if (thisWebcam != null) {
+            return thisWebcam
+        }
+
+        val webcam = Webcam.getDefault()?.apply {
+            val newDimension = Dimension(CAMERA.RESOLUTION_WIDTH, CAMERA.RESOLUTION_HEIGHT)
+            setCustomViewSizes(newDimension)
+            viewSize = newDimension
+        }
+
+        // Apparently this webcam library keeps its webcam discovery service running after the
+        // initial discovery, but I don't want that, so I'm stopping it.
+        Webcam.getDiscoveryServiceRef()?.stop()
+        if (webcam == null) {
+            throw RuntimeException("failed to get webcam :(")
+        }
+
+        webcam.open()
+
+        // FIXME: do I need to close the camera properly? im not doing it right now because it adds the complexity
+        // of having to track the number of clients using this singleton reference and only closing it when they're
+        // all done.
+
+        this.webcam = webcam
+
+        return webcam
     }
 
-    // Apparently this webcam library keeps its webcam discovery service running after the
-    // initial discovery, but I don't want that, so I'm stopping it.
-    Webcam.getDiscoveryServiceRef()?.stop()
+    fun closeWebcam() {
+        refcount--
 
-    return webcam
+        if (refcount == 0) {
+            webcam?.close()
+            webcam = null
+        }
+    }
 }
 
 // Some code for generating and caching some basic images with an integer in the center.
