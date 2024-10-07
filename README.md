@@ -1,6 +1,12 @@
-<!-- FIXME: write an actual README -->
+This is the codebase for the 2025 STORM Robotics competition.
 
-This is a Kotlin Multiplatform project targeting Desktop, Server.
+The server is the robot, and is connected to via the client, which is controlled by the operator.
+This client will most likely be running on their laptop, but technically the client can also run on
+an Android device. This is mostly for convenience of testing during development.
+
+### Project Structure
+
+This is a Kotlin Multiplatform project targeting Desktop, Android, and Server.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
   It contains several subfolders:
