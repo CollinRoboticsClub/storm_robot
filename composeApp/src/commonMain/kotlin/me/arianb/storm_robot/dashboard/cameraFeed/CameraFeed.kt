@@ -79,7 +79,6 @@ object CameraFeed {
     }
 }
 
-// FIXME: this seems to get kinda fucky sometimes when trying to restart and/or stop repeatedly??? or something?
 class RestartableJob(
     private val coroutineScope: CoroutineScope,
     private val block: suspend CoroutineScope.() -> Unit,
