@@ -62,6 +62,13 @@ fun CameraWindow(cameraFeedViewModel: CameraFeedViewModel = viewModel()) {
                 )
             }
 
+            CameraFeedState.StoppedConnection -> {
+                LabeledIconImage(
+                    iconVector = Icons.Default.Close,
+                    label = "Camera stream was stopped",
+                )
+            }
+
             is CameraFeedState.FailedToConnect -> {
                 LabeledIconImage(
                     iconPainter = painterResource(Res.drawable.error),

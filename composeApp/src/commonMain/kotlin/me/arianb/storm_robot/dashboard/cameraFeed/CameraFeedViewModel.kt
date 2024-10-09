@@ -14,8 +14,7 @@ sealed class CameraFeedState {
     data object NotYetAttemptedConnection : CameraFeedState()
     data object CurrentlyAttemptingConnection : CameraFeedState()
     class CurrentlyConnected(val currentFrame: ImageBitmap) : CameraFeedState()
-
-    //data object StoppedConnection : CameraFeedState()
+    data object StoppedConnection : CameraFeedState()
     class FailedToConnect(val error: Throwable) : CameraFeedState()
 }
 
@@ -63,6 +62,6 @@ class CameraFeedViewModel : ViewModel() {
 
     fun stop() {
         cameraFeedJob.stop()
-//        _cameraFeedState.update { CameraFeedState.StoppedConnection }
+        _cameraFeedState.update { CameraFeedState.StoppedConnection }
     }
 }
