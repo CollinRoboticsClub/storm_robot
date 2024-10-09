@@ -89,10 +89,6 @@ object WebcamConnection {
 
         webcam.open()
 
-        // FIXME: do I need to close the camera properly? im not doing it right now because it adds the complexity
-        // of having to track the number of clients using this singleton reference and only closing it when they're
-        // all done.
-
         this.webcam = webcam
 
         return webcam
