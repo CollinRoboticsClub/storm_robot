@@ -24,7 +24,6 @@ const val GAMEPAD_POLLING_RATE_PER_SECOND: Long = 20
 const val GAMEPAD_POLLING_DELAY_MILLIS: Long = (1000 / GAMEPAD_POLLING_RATE_PER_SECOND)
 
 // FIXME: implement controller input
-// FIXME: add platform-specific rumble method? for multi-platform rumble support?
 actual suspend fun pollGamepad() = withContext(Dispatchers.IO) {
     val controller = getGamepadSDL()
 

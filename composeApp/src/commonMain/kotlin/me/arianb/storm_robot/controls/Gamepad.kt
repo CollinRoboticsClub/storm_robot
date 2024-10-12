@@ -1,5 +1,8 @@
 package me.arianb.storm_robot.controls
 
+// TODO: add platform-specific rumble method? for multi-platform rumble support?
+//expect fun rumbleGamepad()
+
 expect suspend fun pollGamepad()
 
 // FIXME: implement controller input
