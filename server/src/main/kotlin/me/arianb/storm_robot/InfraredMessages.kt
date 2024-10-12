@@ -7,7 +7,7 @@ import io.ktor.server.routing.Route
 // - messages are 16 bits each
 // - they're transmitted using the NEC protocol
 
-fun Route.IRMessagesRoutes() {
+fun Route.infraredMessagesRoutes() {
     // FIXME: implement
 }
 

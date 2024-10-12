@@ -39,7 +39,7 @@ fun Application.module() {
                 armRoutes()
             }
             route(Server.Endpoints.API_IR_MESSAGES) {
-                IRMessagesRoutes()
+                infraredMessagesRoutes()
             }
         }
 
