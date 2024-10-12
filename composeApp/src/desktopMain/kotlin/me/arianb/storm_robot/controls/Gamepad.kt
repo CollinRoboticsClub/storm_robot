@@ -11,17 +11,17 @@ import io.github.libsdl4j.api.event.SdlEventsConst
 import io.github.libsdl4j.api.gamecontroller.SDL_GameController
 import io.github.libsdl4j.api.gamecontroller.SDL_GameControllerAxis
 import io.github.libsdl4j.api.gamecontroller.SDL_GameControllerButton
-import io.github.libsdl4j.api.gamecontroller.SdlGamecontroller.SDL_GameControllerOpen
-import io.github.libsdl4j.api.gamecontroller.SdlGamecontroller.SDL_IsGameController
+import io.github.libsdl4j.api.gamecontroller.SdlGamecontroller.*
 import io.github.libsdl4j.api.joystick.SdlJoystick.SDL_NumJoysticks
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
 const val GAMEPAD_POLLING_RATE_PER_SECOND: Long = 20
 const val GAMEPAD_POLLING_DELAY_MILLIS: Long = (1000 / GAMEPAD_POLLING_RATE_PER_SECOND)
+
+const val GAMEPAD_JOYSTICK_DEADZONE: Short = 2000
 
 // FIXME: implement controller input
 actual suspend fun pollGamepad() = withContext(Dispatchers.IO) {
@@ -72,30 +72,43 @@ private fun getGamepadSDL(): SDL_GameController? {
     return null
 }
 
+private var leftX: Short = 0
+private var leftY: Short = 0
+private var rightX: Short = 0
+private var rightY: Short = 0
 private fun processSDLControllerAxisMotion(event: SDL_Event) {
     val axisID = event.caxis.axis
-    val value = event.caxis.value
+    val axisValue = event.caxis.value
+    val axisName = SDL_GameControllerGetStringForAxis(axisID.toInt())
 
-    val axisName = when (axisID) {
-        SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_TRIGGERLEFT.toByte() -> "LEFT TRIGGER"
-        SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_TRIGGERRIGHT.toByte() -> "RIGHT TRIGGER"
+    when (axisID) {
+        SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_TRIGGERLEFT.toByte() -> {}
+        SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_TRIGGERRIGHT.toByte() -> {}
 
         SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_LEFTX.toByte() -> {
-            Gamepad.leftJoystickCallback(value)
-            "LEFT X"
+            leftX = axisValue
+            Gamepad.leftJoystickCallback(leftY, leftY)
         }
 
         SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_LEFTY.toByte() -> {
-            Gamepad.leftJoystickCallback(value)
-            "LEFT Y"
+            leftY = axisValue
+            Gamepad.leftJoystickCallback(leftX, leftY)
         }
 
-        SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_RIGHTX.toByte() -> "RIGHT X"
-        SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_RIGHTY.toByte() -> "RIGHT Y"
-        else -> "Unknown"
+        SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_RIGHTX.toByte() -> {
+            rightX = axisValue
+            Gamepad.rightJoystickCallback(rightX, rightY)
+        }
+
+        SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_RIGHTY.toByte() -> {
+            rightY = axisValue
+            Gamepad.rightJoystickCallback(rightX, rightY)
+        }
+
+        else -> {}
     }
 
-    println("controller axis [$value]: $axisName ($axisID)")
+    println("controller axis [$axisValue]: $axisName ($axisID)")
 }
 
 private fun processSDLControllerButton(event: SDL_Event) {
@@ -106,24 +119,34 @@ private fun processSDLControllerButton(event: SDL_Event) {
         else -> "unknown state"
     }
 
+    val isButtonPressed = when (val buttonState = event.cbutton.state) {
+        SdlEventsConst.SDL_PRESSED -> true
+        SdlEventsConst.SDL_RELEASED -> false
+        else -> {
+            // I guess we can default to false, but if this code path is actually used, that's not good
+            Logger.DEFAULT.log("Warning: SDL controller button state is unknown: $buttonState")
+            false
+        }
+    }
+
     val name = when (buttonID) {
         SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_A.toByte() -> {
-            Gamepad.onButtonA()
+            Gamepad.onButtonA(isButtonPressed)
             "A"
         }
 
         SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_B.toByte() -> {
-            Gamepad.onButtonB()
+            Gamepad.onButtonB(isButtonPressed)
             "B"
         }
 
         SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_X.toByte() -> {
-            Gamepad.onButtonX()
+            Gamepad.onButtonX(isButtonPressed)
             "X"
         }
 
         SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_Y.toByte() -> {
-            Gamepad.onButtonY()
+            Gamepad.onButtonY(isButtonPressed)
             "Y"
         }
 

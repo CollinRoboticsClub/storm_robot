@@ -25,7 +25,7 @@ fun Route.wheelsRoutes() {
             }
         } catch (e: ClosedReceiveChannelException) {
             // ensure motors are stopped on client disconnection
-            ArduinoSerialConnection.send(WheelMovementPacket(0f, 0f, 0f))
+            ArduinoSerialConnection.send(WheelMovementPacket(0, 0, 0))
 
             application.log.info(
                 "client disconnected from wheels websocket, reason: {}",
@@ -42,6 +42,7 @@ object ArduinoSerialConnection : Closeable {
     private const val DEVICE_PATH: String = "/dev/ttyUSB0"
     private const val BAUD_RATE: Int = 9600
     private const val TIMEOUT_MILLIS: Int = 100
+    private const val SERIAL_MESSAGE_SEPARATOR: Byte = ' '.code.toByte()
 
     private val serialPort: SerialPort
 
@@ -76,8 +77,13 @@ object ArduinoSerialConnection : Closeable {
 
     suspend fun send(movementPacket: WheelMovementPacket) {
         val bytes = movementPacket.let {
-            "${it.x} ${it.y} ${it.rotation}" + "\n"
-        }.toByteArray()
+            byteArrayOf(
+                it.x,
+                it.y,
+                it.rotation,
+                SERIAL_MESSAGE_SEPARATOR
+            )
+        }
 
         withContext(Dispatchers.IO) {
 //            println("sending wheel movement: $movementPacket")

@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class WheelMovementPacket(
-    val x: Float,
-    val y: Float,
-    val rotation: Float
+    val x: Byte,
+    val y: Byte,
+    val rotation: Byte
 )
 
 @Serializable
