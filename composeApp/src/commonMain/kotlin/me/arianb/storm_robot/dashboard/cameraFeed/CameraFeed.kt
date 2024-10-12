@@ -35,7 +35,6 @@ object CameraFeed {
         install(WebSockets) {
             pingIntervalMillis = Server.PING_PERIOD_MILLIS
             maxFrameSize = Long.MAX_VALUE
-//            contentConverter = KotlinxWebsocketSerializationConverter(Json)
         }
         install(Logging)
     }
