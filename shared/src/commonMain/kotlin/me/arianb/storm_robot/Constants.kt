@@ -9,6 +9,8 @@ data object Server {
 
     data object Endpoints {
         const val API_ROOT = "/api"
+
+        // TODO: add endpoint sub-paths
         const val API_WHEELS = "/wheels"
         const val API_ARM = "/arm"
         const val API_IR_MESSAGES = "/messages"
