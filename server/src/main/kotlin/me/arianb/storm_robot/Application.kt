@@ -5,7 +5,6 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.http.content.staticResources
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.routing.route
@@ -32,9 +31,6 @@ fun Application.module() {
     }
 
     routing {
-        // LEGACY: remove this once the client is more capable
-        staticResources("/", "webui")
-
         route(Server.Endpoints.API_ROOT) {
             route(Server.Endpoints.API_WHEELS) {
                 wheelsRoutes()
