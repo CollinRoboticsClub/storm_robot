@@ -8,9 +8,9 @@ import io.ktor.server.routing.Route
 // - they're transmitted using the NEC protocol
 
 fun Route.IRMessagesRoutes() {
-    TODO()
+    // FIXME: implement
 }
 
 fun scanForMessages() {
-    TODO()
+    // FIXME: implement
 }
