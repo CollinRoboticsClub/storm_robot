@@ -36,7 +36,7 @@ object CameraFeed {
     )
     private val client = HttpClient {
         install(WebSockets) {
-            pingInterval = SERVER.PING_PERIOD_MILLIS
+            pingIntervalMillis = SERVER.PING_PERIOD_MILLIS
             maxFrameSize = Long.MAX_VALUE
 //            contentConverter = KotlinxWebsocketSerializationConverter(Json)
         }
