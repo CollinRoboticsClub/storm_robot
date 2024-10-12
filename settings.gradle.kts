@@ -1,3 +1,6 @@
+// Suppress all the annoying warnings about unstable APIs that have been marked incubating for forever now
+@file:Suppress("UnstableApiUsage")
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {
