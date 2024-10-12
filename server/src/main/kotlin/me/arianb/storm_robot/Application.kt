@@ -27,8 +27,8 @@ fun Application.module() {
         pingPeriodMillis = Server.PING_PERIOD_MILLIS
         timeoutMillis = Server.TIMEOUT_MILLIS
         maxFrameSize = Long.MAX_VALUE
-        masking = false
         contentConverter = KotlinxWebsocketSerializationConverter(Json)
+        masking = false
     }
 
     routing {
