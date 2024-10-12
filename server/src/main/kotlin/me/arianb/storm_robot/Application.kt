@@ -15,7 +15,7 @@ import kotlinx.serialization.json.Json
 import me.arianb.storm_robot.arm.armRoutes
 
 fun main() {
-    embeddedServer(Netty, port = SERVER.PORT, host = "0.0.0.0", module = Application::module)
+    embeddedServer(Netty, port = Server.PORT, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
 
@@ -24,8 +24,8 @@ fun Application.module() {
         json()
     }
     install(WebSockets) {
-        pingPeriodMillis = SERVER.PING_PERIOD_MILLIS
-        timeoutMillis = SERVER.TIMEOUT_MILLIS
+        pingPeriodMillis = Server.PING_PERIOD_MILLIS
+        timeoutMillis = Server.TIMEOUT_MILLIS
         maxFrameSize = Long.MAX_VALUE
         masking = false
         contentConverter = KotlinxWebsocketSerializationConverter(Json)
@@ -35,20 +35,19 @@ fun Application.module() {
         // LEGACY: remove this once the client is more capable
         staticResources("/", "webui")
 
-        // TODO: move paths to constants file?
-        route(SERVER.ENDPOINTS.API_ROOT) {
-            route("/wheels") {
+        route(Server.Endpoints.API_ROOT) {
+            route(Server.Endpoints.API_WHEELS) {
                 wheelsRoutes()
             }
-            route("/arm") {
+            route(Server.Endpoints.API_ARM) {
                 armRoutes()
             }
-            route("/messages") {
+            route(Server.Endpoints.API_IR_MESSAGES) {
 //                IRMessagesRoutes()
             }
         }
 
-        route("/video") {
+        route(Server.Endpoints.VIDEO) {
             cameraRoutes()
         }
     }

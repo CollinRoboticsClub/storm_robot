@@ -21,11 +21,11 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import me.arianb.storm_robot.CAMERA
-import me.arianb.storm_robot.SERVER
+import me.arianb.storm_robot.Server
 
 object CameraFeed {
-    var serverHost = SERVER.HOST
-    var serverPort = SERVER.PORT
+    var serverHost = Server.HOST
+    var serverPort = Server.PORT
 
     val frameChannel: Channel<ImageBitmap> = Channel(
         capacity = CAMERA.EXPECTED_FPS,
@@ -33,7 +33,7 @@ object CameraFeed {
     )
     private val client = HttpClient {
         install(WebSockets) {
-            pingIntervalMillis = SERVER.PING_PERIOD_MILLIS
+            pingIntervalMillis = Server.PING_PERIOD_MILLIS
             maxFrameSize = Long.MAX_VALUE
 //            contentConverter = KotlinxWebsocketSerializationConverter(Json)
         }
@@ -44,7 +44,7 @@ object CameraFeed {
         client.webSocket(
             host = this.serverHost,
             port = this.serverPort,
-            path = "/video"
+            path = Server.Endpoints.VIDEO
         ) {
             try {
                 for (frame in incoming) {

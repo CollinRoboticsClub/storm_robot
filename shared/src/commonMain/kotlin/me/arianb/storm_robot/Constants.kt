@@ -1,14 +1,19 @@
 package me.arianb.storm_robot
 
-data object SERVER {
+data object Server {
     const val HOST = "localhost"
     const val PORT = 8080
 
     const val PING_PERIOD_MILLIS: Long = 15_000
     const val TIMEOUT_MILLIS: Long = 15_000
 
-    data object ENDPOINTS {
+    data object Endpoints {
         const val API_ROOT = "/api"
+        const val API_WHEELS = "/wheels"
+        const val API_ARM = "/arm"
+        const val API_IR_MESSAGES = "/messages"
+
+        const val VIDEO = "/video"
     }
 }
 

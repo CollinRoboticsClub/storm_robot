@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import me.arianb.storm_robot.SERVER
+import me.arianb.storm_robot.Server
 
 // This is where the actual implementation of something like "move robot forward" would be.
 
@@ -11,7 +12,7 @@ import me.arianb.storm_robot.SERVER
 object ControlSender {
     private val client = HttpClient {
         install(WebSockets) {
-            pingIntervalMillis = SERVER.PING_PERIOD_MILLIS
+            pingIntervalMillis = Server.PING_PERIOD_MILLIS
             maxFrameSize = Long.MAX_VALUE
 //            contentConverter = KotlinxWebsocketSerializationConverter(Json)
         }
