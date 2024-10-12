@@ -108,7 +108,7 @@ private fun processSDLControllerAxisMotion(event: SDL_Event) {
         else -> {}
     }
 
-    println("controller axis [$axisValue]: $axisName ($axisID)")
+    Logger.DEFAULT.log("controller axis [$axisValue]: $axisName ($axisID)")
 }
 
 private fun processSDLControllerButton(event: SDL_Event) {
@@ -168,5 +168,5 @@ private fun processSDLControllerButton(event: SDL_Event) {
         else -> "Unknown"
     }
 
-    println("controller button [$state]: $name ($buttonID)")
+    Logger.DEFAULT.log("controller button [$state]: $name ($buttonID)")
 }

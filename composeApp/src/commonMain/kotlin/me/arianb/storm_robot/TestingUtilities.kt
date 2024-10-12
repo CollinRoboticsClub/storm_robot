@@ -14,6 +14,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import io.ktor.client.plugins.logging.DEFAULT
+import io.ktor.client.plugins.logging.Logger
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import storm_robot.composeapp.generated.resources.Res
@@ -59,7 +61,7 @@ class MeasureCountPerTime(private val interval: Duration) {
         if ((lastMark + interval).hasPassedNow()) {
             val difference = currentCount - lastCount
 
-            println("current performance: $difference times per $interval")
+            Logger.DEFAULT.log("current performance: $difference times per $interval")
 
             // Reset
             lastCount = currentCount
