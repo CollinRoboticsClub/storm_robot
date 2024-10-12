@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
@@ -35,6 +36,7 @@ kotlin {
             // ktor client
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.serialization.json)
 
             implementation(projects.shared)
         }
@@ -42,8 +44,10 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
 
-            // ktor client
+            // ktor engine
             implementation(libs.ktor.client.engine.cio)
+
+            // logging
             implementation(libs.logback)
 
             // gamepad input
@@ -53,11 +57,16 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
-            // ktor client
+            // ktor engine
             implementation(libs.ktor.client.engine.cio)
-//            implementation(libs.slf4j.android)
+
+            // logging
+            //implementation(libs.slf4j.android)
+
+            // gamepad input can be read natively on Android, no dependency required
         }
 //        webMain.dependencies {
+        // ktor engine
 //            implementation(libs.ktor.client.engine.js)
 //        }
     }
