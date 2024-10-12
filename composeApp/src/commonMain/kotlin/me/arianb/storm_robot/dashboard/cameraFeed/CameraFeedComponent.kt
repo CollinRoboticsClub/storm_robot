@@ -34,7 +34,7 @@ fun CameraWindow(cameraFeedViewModel: CameraFeedViewModel = viewModel()) {
     ) {
         val cameraFeedState by cameraFeedViewModel.cameraFeedState.collectAsState()
 
-        // TODO:
+        // OPTIMIZEME:
         //  if I want to improve rendering performance later on, I can reference this: https://github.com/JetBrains/skiko
         //  sample code to maybe draw in a more "raw"/"immediate" way by bypassing Compose.
         //
