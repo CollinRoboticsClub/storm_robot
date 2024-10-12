@@ -23,10 +23,7 @@ import kotlinx.coroutines.supervisorScope
 import me.arianb.storm_robot.CAMERA
 import me.arianb.storm_robot.SERVER
 
-
 object CameraFeed {
-    const val RETRY_WAIT_TIME_MILLIS: Long = 2500
-
     var serverHost = SERVER.HOST
     var serverPort = SERVER.PORT
 
