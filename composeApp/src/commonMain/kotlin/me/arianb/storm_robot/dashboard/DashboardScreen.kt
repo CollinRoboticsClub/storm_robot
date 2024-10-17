@@ -17,7 +17,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import me.arianb.storm_robot.TestThing
 import me.arianb.storm_robot.dashboard.cameraFeed.CameraWindow
 import me.arianb.storm_robot.theme.PaddingExtraSmall
 import me.arianb.storm_robot.theme.PaddingSmall
@@ -53,7 +52,7 @@ fun DashboardScreen(contentPadding: PaddingValues) {
                     .then(dashboardCommonPadding)
             ) {
                 CameraWindow()
-                TestThing()
+                //TestThing()
             }
 
             // Right Column
