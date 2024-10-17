@@ -6,7 +6,6 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.sendSerialized
-import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -14,6 +13,7 @@ import kotlinx.coroutines.channels.onFailure
 import kotlinx.serialization.json.Json
 import me.arianb.storm_robot.Server
 import me.arianb.storm_robot.WheelMovementPacket
+import me.arianb.storm_robot.websocketCatching
 
 // This is where the actual implementation of something like "move robot forward" would be. More specifically, this is
 // where the code to "tell the server how to move the robot" is written.
@@ -32,13 +32,15 @@ object ControlSender {
         install(Logging)
     }
 
-    suspend fun start() {
-        client.webSocket(
+    suspend fun start(onConnectionError: (Throwable) -> Unit, onErrorInBlock: (Throwable) -> Unit) {
+        client.websocketCatching(
             host = Server.HOST,
             port = Server.PORT,
             path = with(Server.Endpoints) {
                 API_ROOT + API_WHEELS + "/move"
-            }
+            },
+            onConnectionError = onConnectionError,
+            onErrorInBlock = onErrorInBlock
         ) {
             for (message in messageChannel) {
                 runCatching {

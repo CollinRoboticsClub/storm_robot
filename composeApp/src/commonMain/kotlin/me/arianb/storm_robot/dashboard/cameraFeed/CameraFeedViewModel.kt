@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import me.arianb.storm_robot.RestartableJob
 
 sealed class CameraFeedState {
     data object NotYetAttemptedConnection : CameraFeedState()
@@ -29,7 +30,7 @@ class CameraFeedViewModel : ViewModel() {
     private val cameraFeedJob = RestartableJob(
         coroutineScope = cameraCoroutineScope,
         block = {
-            CameraFeed.start()
+            CameraFeed.start(onConnectionError = {})
         },
         handler = CoroutineExceptionHandler { _, t ->
             _cameraFeedState.update { CameraFeedState.FailedToConnect(t) }
