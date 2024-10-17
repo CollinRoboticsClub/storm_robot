@@ -9,6 +9,7 @@ data object Server {
 
     const val PING_PERIOD_MILLIS: Long = 15_000
     const val TIMEOUT_MILLIS: Long = 15_000
+    const val WEBSOCKET_MAX_FRAME_SIZE: Long = Long.MAX_VALUE
 
     data object Endpoints {
         const val API_ROOT: EndpointPath = "/api"

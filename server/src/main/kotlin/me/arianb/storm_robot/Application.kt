@@ -25,7 +25,7 @@ fun Application.module() {
     install(WebSockets) {
         pingPeriodMillis = Server.PING_PERIOD_MILLIS
         timeoutMillis = Server.TIMEOUT_MILLIS
-        maxFrameSize = Long.MAX_VALUE
+        maxFrameSize = Server.WEBSOCKET_MAX_FRAME_SIZE
         contentConverter = KotlinxWebsocketSerializationConverter(Json)
         masking = false
     }

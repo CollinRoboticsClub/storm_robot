@@ -26,7 +26,7 @@ object ControlSender {
     private val client = HttpClient {
         install(WebSockets) {
             pingIntervalMillis = Server.PING_PERIOD_MILLIS
-            maxFrameSize = Long.MAX_VALUE
+            maxFrameSize = Server.WEBSOCKET_MAX_FRAME_SIZE
             contentConverter = KotlinxWebsocketSerializationConverter(Json)
         }
         install(Logging)
