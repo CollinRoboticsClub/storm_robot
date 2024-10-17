@@ -30,6 +30,9 @@ object Gamepad {
     fun rightJoystickCallback(x: Short, y: Short) {
 
     }
+
+    fun leftTriggerCallback(value: Short) {}
+    fun rightTriggerCallback(value: Short) {}
 }
 
 enum class DPAD {
