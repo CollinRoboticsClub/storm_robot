@@ -7,7 +7,7 @@ import io.ktor.client.plugins.logging.Logger
 import kotlin.math.abs
 
 actual suspend fun pollGamepad() {
-    // FIXME: implement
+    // Not necessary to implement on Android because they already handle the gamepad inputs with callbacks
 }
 
 fun onGenericMotionEventHelper(event: MotionEvent): Boolean {
