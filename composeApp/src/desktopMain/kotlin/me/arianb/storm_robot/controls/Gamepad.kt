@@ -23,7 +23,7 @@ const val GAMEPAD_POLLING_DELAY_MILLIS: Long = (1000 / GAMEPAD_POLLING_RATE_PER_
 
 const val GAMEPAD_JOYSTICK_DEADZONE: Short = 2000
 
-// FIXME: implement controller input
+// FIXME: finish implementing controller input
 actual suspend fun pollGamepad() = withContext(Dispatchers.IO) {
     val controller = getGamepadSDL()
 
