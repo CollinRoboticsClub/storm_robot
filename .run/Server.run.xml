@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ApplicationKt" type="KtorApplicationConfigurationType" factoryName="Ktor" nameIsGenerated="true">
+  <configuration default="false" name="Server" type="KtorApplicationConfigurationType" factoryName="Ktor">
     <option name="MAIN_CLASS_NAME" value="me.arianb.storm_robot.ApplicationKt" />
     <module name="storm_robot.server.main" />
     <option name="alternativeJrePath" />
