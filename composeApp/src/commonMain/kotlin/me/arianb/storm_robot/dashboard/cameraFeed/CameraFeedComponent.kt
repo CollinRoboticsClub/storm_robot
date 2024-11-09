@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -23,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import me.arianb.storm_robot.CAMERA
 import me.arianb.storm_robot.LabeledIconImage
 import org.jetbrains.compose.resources.painterResource
+import storm_robot.composeapp.generated.resources.MoreHoriz
 import storm_robot.composeapp.generated.resources.Res
 import storm_robot.composeapp.generated.resources.error
 
@@ -56,8 +56,7 @@ fun CameraWindow(cameraFeedViewModel: CameraFeedViewModel = viewModel()) {
 
             CameraFeedState.CurrentlyAttemptingConnection -> {
                 LabeledIconImage(
-                    // FIXME: update placeholder image
-                    iconVector = Icons.Default.MoreVert,
+                    iconPainter = painterResource(Res.drawable.MoreHoriz),
                     label = "Attempting to connect to stream...",
                 )
             }
