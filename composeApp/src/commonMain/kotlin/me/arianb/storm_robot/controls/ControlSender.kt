@@ -15,9 +15,8 @@ import me.arianb.storm_robot.Server
 import me.arianb.storm_robot.WheelMovementPacket
 import me.arianb.storm_robot.websocketCatching
 
-// This is where the actual implementation of something like "move robot forward" would be. More specifically, this is
-// where the code to "tell the server how to move the robot" is written.
-
+// This is where the actual implementation of something like "move robot forward" would be.
+// More specifically, this is where the code to "tell the server how to move the robot" is written.
 object ControlSender {
     // TODO: decide if this onBufferOverflow behavior is a good idea. I'm not sure about it right now.
     private val messageChannel: Channel<Any> = Channel(1000, onBufferOverflow = BufferOverflow.DROP_OLDEST)
