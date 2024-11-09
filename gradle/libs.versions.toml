@@ -1,9 +1,9 @@
 [versions]
 agp = "8.5.2"
-androidx-activityCompose = "1.9.2"
+androidx-activityCompose = "1.9.3"
 androidx-appcompat = "1.7.0"
-androidx-constraintlayout = "2.1.4"
-androidx-core-ktx = "1.13.1"
+androidx-constraintlayout = "2.2.0"
+androidx-core-ktx = "1.15.0"
 androidx-material = "1.12.0"
 androidx-lifecycle = "2.8.2"
 compose-plugin = "1.6.11"
