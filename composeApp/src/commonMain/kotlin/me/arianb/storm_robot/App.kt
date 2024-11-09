@@ -37,6 +37,7 @@ fun App() {
                         }
                     )
                 }
+                controlSenderJob.start()
             }
         )
     }
