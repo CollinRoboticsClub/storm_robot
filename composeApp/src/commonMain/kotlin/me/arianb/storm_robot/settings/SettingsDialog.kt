@@ -50,11 +50,13 @@ fun SettingsDialog(
                 var serverIPString by remember { mutableStateOf(settings.serverHost) }
                 var serverPort by remember { mutableStateOf(settings.serverPort.toString()) }
                 TextField(
+                    singleLine = true,
                     value = serverIPString,
                     label = { Text("Server IP") },
                     onValueChange = { serverIPString = it },
                 )
                 TextField(
+                    singleLine = true,
                     value = serverPort,
                     label = { Text("Server Port") },
                     onValueChange = { serverPort = it },
