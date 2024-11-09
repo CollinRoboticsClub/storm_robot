@@ -72,7 +72,7 @@ fun Short.mapToByte(): Byte =
     mapOntoRange(fromRange = Pair(Short.MIN_VALUE, Short.MAX_VALUE), toRange = Pair(Byte.MIN_VALUE, Byte.MAX_VALUE))
 
 fun Short.mapOntoRange(fromRange: Pair<Short, Short>, toRange: Pair<Byte, Byte>): Byte =
-    (toRange.first + (
+    ((this - fromRange.first) *
             (toRange.second - toRange.first) / (fromRange.second - fromRange.first)
-            ) * (this - fromRange.first)
+            + toRange.first
             ).toByte()
