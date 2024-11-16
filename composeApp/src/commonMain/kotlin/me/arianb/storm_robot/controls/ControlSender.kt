@@ -52,14 +52,18 @@ object ControlSender {
 
     fun sendMovement(x: Short, y: Short) {
         // FIXME: replace placeholder rotation value
-        val rotation: Short = 0
+//        val rotation: Short = ???
+
+        val wheelMovementPacket = WheelMovementPacket(
+            x.mapToByte(),
+            y.mapToByte(),
+//            rotation.mapToByte(),
+            0
+        )
+        Logger.DEFAULT.log("packet: $wheelMovementPacket")
 
         messageChannel.trySend(
-            WheelMovementPacket(
-                x.mapToByte(),
-                y.mapToByte(),
-                rotation.mapToByte()
-            )
+            wheelMovementPacket
         ).onFailure {
             Logger.DEFAULT.log("uh oh, we failed to add a WheelMovementPacket to the channel.")
         }
