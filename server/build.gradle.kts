@@ -33,6 +33,6 @@ dependencies {
     implementation(libs.logback)
 
     // Tests
-    testImplementation(libs.ktor.server.tests)
+    testImplementation(libs.ktor.server.test)
     testImplementation(libs.kotlin.test.junit)
 }
