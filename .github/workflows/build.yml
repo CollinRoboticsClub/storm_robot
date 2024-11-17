@@ -1,0 +1,43 @@
+name: Build Artifacts
+on:
+  pull_request:
+    paths-ignore:
+      - "**.md"
+  push:
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  client:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build
+        with:
+          gradle-target: '--parallel composeApp:build -x lint composeApp:packageUberJarForCurrentOS'
+
+      - name: 'Upload Desktop artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          path: 'composeApp/build/compose/jars/*.jar'
+          name: 'client_desktop-jar'
+
+      - name: 'Upload Android artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          path: 'composeApp/build/outputs/apk/release/*.apk'
+          name: 'client_android-apk-release-unsigned'
+
+  server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build
+        with:
+          gradle-target: 'server:build'
+
+      - name: 'Upload JVM artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          path: 'server/build/libs/server-all.jar'
+          name: 'server_jar'
