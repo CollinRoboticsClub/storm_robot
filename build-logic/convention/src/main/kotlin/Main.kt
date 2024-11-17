@@ -17,6 +17,9 @@ class MyTargetConfigurations : Plugin<Project> {
     override fun apply(target: Project) {}
 
     object Android {
+        private const val VERSION_CODE = 1
+        private const val VERSION_NAME = "1.0"
+
         private const val MIN_SDK = 28
         private const val TARGET_SDK = 34
         private const val COMPILE_SDK = 34
@@ -61,8 +64,8 @@ class MyTargetConfigurations : Plugin<Project> {
                 applicationId = MyConstants.ROOT_PACKAGE
                 minSdk = MIN_SDK
                 targetSdk = TARGET_SDK
-                versionCode = 1
-                versionName = "1.0"
+                versionCode = VERSION_CODE
+                versionName = VERSION_NAME
             }
             packaging {
                 resources {
@@ -84,14 +87,24 @@ class MyTargetConfigurations : Plugin<Project> {
     }
 
     object Desktop {
+        private const val PACKAGE_VERSION = "1.0.0"
+
         fun composeConfig(): (DesktopExtension).() -> Unit = {
             application {
                 mainClass = "${MyConstants.ROOT_PACKAGE}.MainKt"
-
                 nativeDistributions {
-                    targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.AppImage)
+                    targetFormats(
+                        TargetFormat.AppImage,
+                        TargetFormat.Exe,
+                        TargetFormat.Dmg
+                    )
                     packageName = MyConstants.ROOT_PACKAGE
-                    packageVersion = "1.0.0"
+                    packageVersion = PACKAGE_VERSION
+                }
+
+                // Causing all sorts of build problems
+                buildTypes.release.proguard {
+                    isEnabled.set(false)
                 }
             }
         }
@@ -111,6 +124,6 @@ class MyTargetConfigurations : Plugin<Project> {
 object MyConstants {
     private const val ROOT_DOMAIN = "me.arianb"
     private const val ROOT_PROJECT_NAME = "storm_robot"
-    
+
     const val ROOT_PACKAGE = "$ROOT_DOMAIN.$ROOT_PROJECT_NAME"
 }
