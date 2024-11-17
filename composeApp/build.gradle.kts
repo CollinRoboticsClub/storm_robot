@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+val enableMultiplatformUberJar = true
 kotlin {
     jvm("desktop")
 
@@ -41,7 +42,21 @@ kotlin {
             implementation(projects.shared)
         }
         desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
+            with(compose.desktop) {
+                if (enableMultiplatformUberJar) {
+                    // x86_64
+                    implementation(linux_x64)
+                    implementation(windows_x64)
+//                    implementation(macos_x64)
+
+                    // arm_64
+//                    implementation(macos_arm64)
+//                    implementation(linux_arm64)
+                } else {
+                    implementation(currentOs)
+                }
+            }
+
             implementation(libs.kotlinx.coroutines.swing)
 
             // ktor engine
