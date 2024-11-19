@@ -43,25 +43,24 @@ fun Route.armRoutes() {
     post("/preset/default") {
         with(Arm) {
             //base.setAngle(0)
-            shoulder.setAngle(90)
-            elbow.setAngle(135)
-            wrist.setAngle(135)
+            shoulder.setAngle(90u)
+            elbow.setAngle(135u)
+            wrist.setAngle(135u)
             //gripper.setAngle(0)
         }
     }
 }
 
-class SafeServo(
-    private val servo: Servo,
-    private val minAngle: Int,
-    private val maxAngle: Int,
-    initialAngle: Int
-) {
-    init {
-        servo.angle = initialAngle
-    }
+typealias ServoAngle = UByte
 
-    fun setAngle(absoluteAngle: Int) {
+class Servo(
+    initialAngle: ServoAngle,
+    private val minAngle: ServoAngle,
+    private val maxAngle: ServoAngle,
+) {
+    private var angle: ServoAngle = initialAngle
+
+    fun setAngle(absoluteAngle: ServoAngle) {
         // Clamp values to valid range
         if (absoluteAngle > maxAngle || absoluteAngle < minAngle) {
             // println("provided angle is out of range, ignoring it")
@@ -69,39 +68,35 @@ class SafeServo(
         }
 
         // Don't do anything if servo angle is already correct
-        if (absoluteAngle == servo.angle) {
+        if (absoluteAngle == angle) {
             // println("servo is already at this angle, ignoring it")
             return
         }
 
-        servo.angle = absoluteAngle
+        angle = absoluteAngle
     }
 
-    fun move(relativeAngle: Int) {
-        val absoluteAngle = servo.angle + relativeAngle
+    fun move(relativeAngle: ServoAngle) {
+        val absoluteAngle: ServoAngle = (angle + relativeAngle).toUByte()
 
         return setAngle(absoluteAngle)
     }
 }
 
 object Arm {
-    private val servoList: Array<Servo>
-    val base: SafeServo
-    val shoulder: SafeServo
-    val elbow: SafeServo
-    val wrist: SafeServo
-    val gripper: SafeServo
+    private val servoList: List<Servo> = mutableListOf()
+    val base: Servo
+    val shoulder: Servo
+    val elbow: Servo
+    val wrist: Servo
+    val gripper: Servo
 
     init {
-        val kit = ServoKit(channels = 16)
-
         // PIN-OUT
-        base = SafeServo(kit.servo[0], initialAngle = 90, minAngle = 70, maxAngle = 110)
-        shoulder = SafeServo(kit.servo[1], initialAngle = 90, minAngle = 40, maxAngle = 180)
-        elbow = SafeServo(kit.servo[2], initialAngle = 90, minAngle = 20, maxAngle = 135)
-        wrist = SafeServo(kit.servo[3], initialAngle = 90, minAngle = 70, maxAngle = 110)
-        gripper = SafeServo(kit.servo[4], initialAngle = 90, minAngle = 70, maxAngle = 150)
-
-        servoList = kit.servo
+        base = Servo(initialAngle = 90u, minAngle = 70u, maxAngle = 110u)
+        shoulder = Servo(initialAngle = 90u, minAngle = 40u, maxAngle = 180u)
+        elbow = Servo(initialAngle = 90u, minAngle = 20u, maxAngle = 135u)
+        wrist = Servo(initialAngle = 90u, minAngle = 70u, maxAngle = 110u)
+        gripper = Servo(initialAngle = 90u, minAngle = 70u, maxAngle = 150u)
     }
 }

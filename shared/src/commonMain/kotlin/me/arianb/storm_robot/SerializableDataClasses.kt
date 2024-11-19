@@ -11,9 +11,9 @@ data class WheelMovementPacket(
 
 @Serializable
 data class ArmMovementPacket(
-    val baseAngle: Int,
-    val shoulderAngle: Int,
-    val elbowAngle: Int,
-    val wristAngle: Int,
-    val gripperAngle: Int
+    val baseAngle: UByte,
+    val shoulderAngle: UByte,
+    val elbowAngle: UByte,
+    val wristAngle: UByte,
+    val gripperAngle: UByte
 )
