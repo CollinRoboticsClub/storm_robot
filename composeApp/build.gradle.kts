@@ -12,11 +12,13 @@ kotlin {
 
     androidTarget(MyTargetConfigurations.Android.config())
 
-//    js("web") {
-//        moduleName = "composeApp"
-//        browser {}
-//        binaries.executable()
-//    }
+    /*
+    wasmJs("web") {
+        outputModuleName = "composeApp"
+        browser {}
+        binaries.executable()
+    }
+    */
 
     sourceSets {
         val desktopMain by getting
@@ -80,10 +82,12 @@ kotlin {
 
             // gamepad input can be read natively on Android, no dependency required
         }
-//        webMain.dependencies {
-        // ktor engine
-//            implementation(libs.ktor.client.engine.js)
-//        }
+        /*
+        webMain.dependencies {
+            // ktor engine
+            implementation(libs.ktor.client.engine.js)
+        }
+        */
     }
 }
 

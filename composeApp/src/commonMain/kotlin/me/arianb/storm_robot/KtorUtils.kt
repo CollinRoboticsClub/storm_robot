@@ -21,7 +21,7 @@ suspend fun HttpClient.websocketCatching(
     path: String? = null,
     request: HttpRequestBuilder.() -> Unit = {},
     onConnectionError: (Throwable) -> Unit = {},
-    onErrorInBlock: (Throwable) -> Unit = {}, // TODO: improve name
+    onErrorInBlock: (Throwable) -> Unit = {},
     block: suspend DefaultClientWebSocketSession.() -> Unit
 ) {
     try {
