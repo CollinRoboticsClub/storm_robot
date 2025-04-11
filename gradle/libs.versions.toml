@@ -24,6 +24,8 @@ jSerialComm = "2.11.0"
 libsdl4j = "2.28.4-1.6"
 webcam-capture = "0.3.12"
 
+arrow = "2.0.1"
+
 [libraries]
 # testing
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -69,6 +71,11 @@ jSerialComm = { module = "com.fazecast:jSerialComm", version.ref = "jSerialComm"
 libsdl4j = { module = "io.github.libsdl4j:libsdl4j", version.ref = "libsdl4j" }
 
 webcam-capture = { module = "com.github.sarxos:webcam-capture", version.ref = "webcam-capture" }
+
+# Arrow library
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
+arrow-fx-coroutines = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "arrow" }
+arrow-resilience = { module = "io.arrow-kt:arrow-resilience", version.ref = "arrow" }
 
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }

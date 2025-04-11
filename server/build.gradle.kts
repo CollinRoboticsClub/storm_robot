@@ -28,6 +28,11 @@ dependencies {
 
     // webcam
     implementation(libs.webcam.capture)
+    
+    // Arrow
+    implementation(libs.arrow.core)
+    implementation(libs.arrow.resilience)
+    implementation(libs.arrow.fx.coroutines)
 
     // logging
     implementation(libs.logback)
