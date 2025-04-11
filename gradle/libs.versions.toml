@@ -18,6 +18,7 @@ ktor = "3.0.0"
 
 logback = "1.5.7"
 slf4j-android = "2.0.16-0"
+logging-kermit = "2.0.4"
 
 jSerialComm = "2.11.0"
 libsdl4j = "2.28.4-1.6"
@@ -61,6 +62,7 @@ ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", 
 
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 slf4j-android = { module = "org.slf4j:slf4j-android", version.ref = "slf4j-android" }
+logging-kermit = { module = "co.touchlab:kermit", version.ref = "logging-kermit" }
 
 jSerialComm = { module = "com.fazecast:jSerialComm", version.ref = "jSerialComm" }
 

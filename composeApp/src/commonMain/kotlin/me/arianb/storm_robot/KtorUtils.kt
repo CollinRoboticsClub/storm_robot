@@ -1,5 +1,6 @@
 package me.arianb.storm_robot
 
+import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.Logger
@@ -34,19 +35,19 @@ suspend fun HttpClient.websocketCatching(
             try {
                 block()
             } catch (e: CancellationException) {
-                Logger.DEFAULT.log("CancellationException")
+                Logger.d("CancellationException")
 
                 // Propagate the cancellation
                 ensureActive()
 
-                Logger.DEFAULT.log("CancellationException: we didn't re-throw it")
+                Logger.w("CancellationException: we didn't re-throw it")
             } catch (e: ClosedReceiveChannelException) {
-                Logger.DEFAULT.log(
+                Logger.i(
                     "server disconnected from websocket, reason: ${closeReason.await()}"
                 )
             } catch (t: Throwable) {
-                Logger.DEFAULT.log("onError ${closeReason.await()}")
-                Logger.DEFAULT.log(t.stackTraceToString())
+                Logger.w("onError ${closeReason.await()}")
+                Logger.w(t.stackTraceToString())
 
                 onErrorInBlock(t)
             } finally {
@@ -54,7 +55,7 @@ suspend fun HttpClient.websocketCatching(
             }
         }
     } catch (t: Throwable) {
-        Logger.DEFAULT.log("Failed to connect to websocket with throwable: $t")
+        Logger.w("Failed to connect to websocket with throwable: $t")
         onConnectionError(t)
     }
 }

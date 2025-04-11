@@ -12,6 +12,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.ktor.serialization.json)
+
+            // Logging
+            api(libs.logging.kermit)
         }
     }
 }

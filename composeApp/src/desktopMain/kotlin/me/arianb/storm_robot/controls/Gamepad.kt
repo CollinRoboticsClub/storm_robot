@@ -1,5 +1,6 @@
 package me.arianb.storm_robot.controls
 
+import co.touchlab.kermit.Logger
 import io.github.libsdl4j.api.Sdl
 import io.github.libsdl4j.api.Sdl.SDL_Quit
 import io.github.libsdl4j.api.SdlSubSystemConst
@@ -13,8 +14,6 @@ import io.github.libsdl4j.api.gamecontroller.SDL_GameControllerAxis
 import io.github.libsdl4j.api.gamecontroller.SDL_GameControllerButton
 import io.github.libsdl4j.api.gamecontroller.SdlGamecontroller.*
 import io.github.libsdl4j.api.joystick.SdlJoystick.SDL_NumJoysticks
-import io.ktor.client.plugins.logging.DEFAULT
-import io.ktor.client.plugins.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -68,7 +67,7 @@ private fun getGamepadSDL(): SDL_GameController? {
         }
     }
 
-    Logger.DEFAULT.log("there are no gamepads connected")
+    Logger.w("there are no gamepads connected")
     return null
 }
 
@@ -108,7 +107,7 @@ private fun processSDLControllerAxisMotion(event: SDL_Event) {
         else -> {}
     }
 
-    Logger.DEFAULT.log("controller axis [$axisValue]: $axisName ($axisID)")
+    Logger.d("controller axis [$axisValue]: $axisName ($axisID)")
 }
 
 private fun processSDLControllerButton(event: SDL_Event) {
@@ -124,7 +123,7 @@ private fun processSDLControllerButton(event: SDL_Event) {
         SdlEventsConst.SDL_RELEASED -> false
         else -> {
             // I guess we can default to false, but if this code path is actually used, that's not good
-            Logger.DEFAULT.log("Warning: SDL controller button state is unknown: $buttonState")
+            Logger.w("SDL controller button state is unknown: $buttonState")
             false
         }
     }
@@ -168,5 +167,5 @@ private fun processSDLControllerButton(event: SDL_Event) {
         else -> "Unknown"
     }
 
-    Logger.DEFAULT.log("controller button [$state]: $name ($buttonID)")
+    Logger.d("controller button [$state]: $name ($buttonID)")
 }

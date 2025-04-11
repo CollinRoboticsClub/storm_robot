@@ -1,9 +1,7 @@
 package me.arianb.storm_robot.controls
 
+import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.logging.DEFAULT
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.sendSerialized
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
@@ -44,7 +42,7 @@ object ControlSender {
                 runCatching {
                     sendSerialized(message)
                 }.onFailure { throwable ->
-                    Logger.DEFAULT.log("exception thrown while attempted to serialize and send message: $throwable")
+                    Logger.e("exception thrown while attempted to serialize and send message: $throwable")
                 }
             }
         }
@@ -60,12 +58,12 @@ object ControlSender {
 //            rotation.mapToByte(),
             0
         )
-        Logger.DEFAULT.log("packet: $wheelMovementPacket")
+        Logger.d("packet: $wheelMovementPacket")
 
         messageChannel.trySend(
             wheelMovementPacket
         ).onFailure {
-            Logger.DEFAULT.log("uh oh, we failed to add a WheelMovementPacket to the channel.")
+            Logger.e("uh oh, we failed to add a WheelMovementPacket to the channel.")
         }
     }
 }
