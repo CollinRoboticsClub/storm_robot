@@ -7,7 +7,7 @@ import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.websocket.Frame
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
-import me.arianb.storm_robot.CAMERA
+import me.arianb.storm_robot.Camera
 import me.arianb.storm_robot.Server
 import me.arianb.storm_robot.websocketCatching
 
@@ -16,7 +16,7 @@ object CameraFeed {
     var serverPort = Server.PORT
 
     val frameChannel: Channel<ImageBitmap> = Channel(
-        capacity = CAMERA.EXPECTED_FPS,
+        capacity = Camera.EXPECTED_FPS,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     private val client = HttpClient {

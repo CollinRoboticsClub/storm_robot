@@ -25,7 +25,7 @@ data object Server {
 
 typealias ResolutionSize = Int
 
-data object CAMERA {
+data object Camera {
     const val RESOLUTION_WIDTH: ResolutionSize = 1280
     const val RESOLUTION_HEIGHT: ResolutionSize = 720
     const val EXPECTED_FPS: Int = 30

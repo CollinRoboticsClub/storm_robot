@@ -19,7 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import me.arianb.storm_robot.CAMERA
+import me.arianb.storm_robot.Camera
 import me.arianb.storm_robot.LabeledIconImage
 import org.jetbrains.compose.resources.painterResource
 import storm_robot.composeapp.generated.resources.MoreHoriz
@@ -29,7 +29,7 @@ import storm_robot.composeapp.generated.resources.error
 @Composable
 fun CameraWindow(cameraFeedViewModel: CameraFeedViewModel = viewModel()) {
     Surface(
-        modifier = Modifier.aspectRatio(CAMERA.ASPECT_RATIO),
+        modifier = Modifier.aspectRatio(Camera.ASPECT_RATIO),
         color = MaterialTheme.colorScheme.primary
     ) {
         val cameraFeedState by cameraFeedViewModel.cameraFeedState.collectAsState()
