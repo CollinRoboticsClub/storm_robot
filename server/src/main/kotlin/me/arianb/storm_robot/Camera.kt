@@ -75,7 +75,7 @@ object WebcamConnection {
         }
 
         val webcam = Webcam.getDefault()?.apply {
-            val newDimension = Dimension(CAMERA.RESOLUTION_WIDTH, CAMERA.RESOLUTION_HEIGHT)
+            val newDimension = Dimension(Camera.RESOLUTION_WIDTH, Camera.RESOLUTION_HEIGHT)
             setCustomViewSizes(newDimension)
             viewSize = newDimension
         }
@@ -111,7 +111,7 @@ object FrameGeneration {
     private val generatedFrames = mutableListOf<ByteArray>()
     private val outputStream = ByteArrayOutputStream()
     private val img =
-        BufferedImage(CAMERA.RESOLUTION_WIDTH, CAMERA.RESOLUTION_HEIGHT, BufferedImage.TYPE_INT_RGB)
+        BufferedImage(Camera.RESOLUTION_WIDTH, Camera.RESOLUTION_HEIGHT, BufferedImage.TYPE_INT_RGB)
     private val g2d: Graphics2D = img.createGraphics()
 
     fun getFrame(index: Int): ByteArray {
