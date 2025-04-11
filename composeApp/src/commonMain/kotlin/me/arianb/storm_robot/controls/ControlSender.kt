@@ -11,6 +11,7 @@ import kotlinx.coroutines.channels.onFailure
 import kotlinx.serialization.json.Json
 import me.arianb.storm_robot.Server
 import me.arianb.storm_robot.WheelMovementPacket
+import me.arianb.storm_robot.applyCommonHttpClientConfig
 import me.arianb.storm_robot.websocketCatching
 
 // This is where the actual implementation of something like "move robot forward" would be.
@@ -20,12 +21,10 @@ object ControlSender {
     private val messageChannel: Channel<Any> = Channel(1000, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     private val client = HttpClient {
-        install(WebSockets) {
-            pingIntervalMillis = Server.PING_PERIOD_MILLIS
-            maxFrameSize = Server.WEBSOCKET_MAX_FRAME_SIZE
+        applyCommonHttpClientConfig()
+        WebSockets {
             contentConverter = KotlinxWebsocketSerializationConverter(Json)
         }
-        install(Logging)
     }
 
     suspend fun start(onConnectionError: (Throwable) -> Unit, onErrorInBlock: (Throwable) -> Unit) {

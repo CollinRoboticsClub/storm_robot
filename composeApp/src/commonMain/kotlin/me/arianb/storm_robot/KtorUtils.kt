@@ -2,9 +2,10 @@ package me.arianb.storm_robot
 
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.logging.DEFAULT
-import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
+import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.HttpMethod
@@ -12,6 +13,14 @@ import io.ktor.utils.io.CancellationException
 import io.ktor.websocket.close
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.ensureActive
+
+fun HttpClientConfig<*>.applyCommonHttpClientConfig() {
+    install(WebSockets) {
+        pingIntervalMillis = Server.PING_PERIOD_MILLIS
+        maxFrameSize = Server.WEBSOCKET_MAX_FRAME_SIZE
+    }
+    install(Logging)
+}
 
 // Kinda lame code to centralize exception handling in websocket clients. Not sure how to improve it yet.
 suspend fun HttpClient.websocketCatching(
