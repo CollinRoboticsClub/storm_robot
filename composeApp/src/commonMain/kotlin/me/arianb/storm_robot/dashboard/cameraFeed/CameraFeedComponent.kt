@@ -21,18 +21,24 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import me.arianb.storm_robot.Camera
 import me.arianb.storm_robot.LabeledIconImage
+import me.arianb.storm_robot.settings.SettingsViewModel
 import org.jetbrains.compose.resources.painterResource
 import storm_robot.composeapp.generated.resources.MoreHoriz
 import storm_robot.composeapp.generated.resources.Res
 import storm_robot.composeapp.generated.resources.error
 
 @Composable
-fun CameraWindow(cameraFeedViewModel: CameraFeedViewModel = viewModel()) {
+fun CameraWindow(
+    cameraFeedViewModel: CameraFeedViewModel = viewModel(),
+    settingsViewModel: SettingsViewModel = viewModel()
+) {
+    // FIXME: multiple video stream support (probably take param for camera index or something)
     Surface(
         modifier = Modifier.aspectRatio(Camera.ASPECT_RATIO),
         color = MaterialTheme.colorScheme.primary
     ) {
         val cameraFeedState by cameraFeedViewModel.cameraFeedState.collectAsState()
+        val userPreferencesState by settingsViewModel.userPreferences.collectAsState()
 
         // OPTIMIZEME:
         //  if I want to improve rendering performance later on, I can reference this: https://github.com/JetBrains/skiko

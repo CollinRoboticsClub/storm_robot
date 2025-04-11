@@ -27,10 +27,15 @@ object ControlSender {
         }
     }
 
-    suspend fun start(onConnectionError: (Throwable) -> Unit, onErrorInBlock: (Throwable) -> Unit) {
+    suspend fun start(
+        host: String,
+        port: Int,
+        onConnectionError: (Throwable) -> Unit,
+        onErrorInBlock: (Throwable) -> Unit
+    ) {
         client.websocketCatching(
-            host = Server.HOST,
-            port = Server.PORT,
+            host = host,
+            port = port,
             path = with(Server.Endpoints) {
                 API_ROOT + API_WHEELS + "/move"
             },

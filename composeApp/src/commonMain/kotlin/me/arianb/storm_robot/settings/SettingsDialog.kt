@@ -30,7 +30,7 @@ fun SettingsDialog(
     onDismissRequest: () -> Unit,
     settingsViewModel: SettingsViewModel = viewModel()
 ) {
-    val settings by settingsViewModel.userPreferences.collectAsState()
+    val userPreferences by settingsViewModel.userPreferences.collectAsState()
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -47,8 +47,8 @@ fun SettingsDialog(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
-                var serverIPString by remember { mutableStateOf(settings.serverHost) }
-                var serverPort by remember { mutableStateOf(settings.serverPort.toString()) }
+                var serverIPString by remember { mutableStateOf(userPreferences.serverHost) }
+                var serverPortString by remember { mutableStateOf(userPreferences.serverPort.toString()) }
                 TextField(
                     singleLine = true,
                     value = serverIPString,
@@ -57,9 +57,11 @@ fun SettingsDialog(
                 )
                 TextField(
                     singleLine = true,
-                    value = serverPort,
+                    value = serverPortString,
                     label = { Text("Server Port") },
-                    onValueChange = { serverPort = it },
+                    onValueChange = {
+                        serverPortString = it
+                    },
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -69,7 +71,7 @@ fun SettingsDialog(
                         onClick = {
                             with(settingsViewModel) {
                                 setServerHost(serverIPString)
-                                setServerPort(serverPort.toInt())
+                                setServerPort(serverPortString.toInt())
                             }
                             onDismissRequest()
                         }
