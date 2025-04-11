@@ -22,7 +22,7 @@ class MyTargetConfigurations : Plugin<Project> {
 
         private const val MIN_SDK = 28
         private const val TARGET_SDK = 34
-        private const val COMPILE_SDK = 34
+        private const val COMPILE_SDK = 35
 
         private val JVM_VERSION = JvmTarget.JVM_17
         private val JDK_VERSION = JavaVersion.VERSION_17
