@@ -28,7 +28,7 @@ dependencies {
 
     // webcam
     implementation(libs.webcam.capture)
-    
+
     // Arrow
     implementation(libs.arrow.core)
     implementation(libs.arrow.resilience)
