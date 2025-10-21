@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,13 +32,15 @@ fun MatchTimer() {
     var startTime by remember { mutableStateOf(timeSource.markNow()) }
 
     var numSecondsPassed by remember {
-        mutableStateOf(
+        mutableLongStateOf(
             (timeSource.markNow() - startTime).inWholeSeconds
         )
     }
 
-    val timerString by derivedStateOf {
-        "${numSecondsPassed / 60}:${(numSecondsPassed % 60).toString().padStart(2, '0')}"
+    val timerString by remember {
+        derivedStateOf {
+            "${numSecondsPassed / 60}:${(numSecondsPassed % 60).toString().padStart(2, '0')}"
+        }
     }
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text("Match Timer: $timerString")
