@@ -40,8 +40,9 @@ kotlin {
             // ktor client
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.contentnegotiation)
             implementation(libs.ktor.serialization.json)
-            
+
             // Arrow
             implementation(libs.arrow.core)
             implementation(libs.arrow.resilience)

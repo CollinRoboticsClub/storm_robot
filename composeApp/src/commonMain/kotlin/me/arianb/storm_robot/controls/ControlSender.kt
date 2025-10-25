@@ -2,13 +2,10 @@ package me.arianb.storm_robot.controls
 
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.sendSerialized
-import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.onFailure
-import kotlinx.serialization.json.Json
 import me.arianb.storm_robot.Server
 import me.arianb.storm_robot.WheelMovementPacket
 import me.arianb.storm_robot.applyCommonHttpClientConfig
@@ -22,9 +19,6 @@ object ControlSender {
 
     private val client = HttpClient {
         applyCommonHttpClientConfig()
-        WebSockets {
-            contentConverter = KotlinxWebsocketSerializationConverter(Json)
-        }
     }
 
     suspend fun start(

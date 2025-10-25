@@ -2,6 +2,7 @@ package me.arianb.storm_robot.dashboard.cameraFeed
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.arianb.storm_robot.MeasureCountPerTime
 import me.arianb.storm_robot.ResilientService
+import me.arianb.storm_robot.applyCommonHttpClientConfig
 import me.arianb.storm_robot.settings.UserPreferencesRepository
 import kotlin.time.Duration.Companion.seconds
 
@@ -35,13 +37,20 @@ class CameraFeedViewModel : ViewModel() {
     // Camera feed job
     private val jobCoroutineScope = CoroutineScope(Dispatchers.IO)
 
+    private val client = HttpClient {
+        applyCommonHttpClientConfig()
+    }
+
     init {
+        val cameraFeedZero = CameraFeed(0)
+
         val resilientService = ResilientService(
             coroutineScope = jobCoroutineScope,
             flow = userPreferencesFlow,
             block = { userPreferences ->
                 _cameraFeedState.update { CameraFeedState.CurrentlyAttemptingConnection }
-                CameraFeed.start(
+                cameraFeedZero.start(
+                    client = client,
                     host = userPreferences.serverHost,
                     port = userPreferences.serverPort,
                     onConnectionError = { t ->
@@ -58,7 +67,7 @@ class CameraFeedViewModel : ViewModel() {
         // If I'm wrong about that, some more logic will need to be added
         jobCoroutineScope.launch {
             val profilingThing = MeasureCountPerTime(1.seconds)
-            for (frame in CameraFeed.frameChannel) {
+            for (frame in cameraFeedZero.frameChannel) {
                 _cameraFeedState.update { CameraFeedState.CurrentlyConnected(frame) }
                 profilingThing.check()
             }

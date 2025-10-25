@@ -41,9 +41,15 @@ class RestartableJob(
         }
 }
 
-class ResilientService<T> {
-    constructor(coroutineScope: CoroutineScope, flow: Flow<T>, block: suspend (T) -> Unit) {
-        coroutineScope.launch {
+class ResilientService<T>(val coroutineScope: CoroutineScope, val flow: Flow<T>, val block: suspend (T) -> Unit) {
+    var job: Job? = null
+
+    init {
+        start()
+    }
+
+    fun start() {
+        job = coroutineScope.launch {
             flow.collectLatest { value ->
                 schedule<Throwable>().retry {
                     block(value)
@@ -52,19 +58,23 @@ class ResilientService<T> {
         }
     }
 
-    //    fun restart() {
-//        coroutineScope.launch {
-//            stop().join()
-//            start()
-//        }
-//    }
-//
-//    fun stop(): Job =
-//        coroutineScope.launch {
-//            supervisorScope {
-//                job.cancelAndJoin()
-//            }
-//        }
+    fun restart() {
+        coroutineScope.launch {
+            stop().join()
+            start()
+        }
+    }
+
+    fun stop(): Job =
+        coroutineScope.launch {
+            supervisorScope {
+                job?.let {
+                    it.cancelAndJoin()
+                    job = null
+                }
+            }
+        }
+
     companion object {
         private inline fun <reified E : Throwable> schedule() = Schedule.forever<E>().log { t, retryCount: Long ->
             println("throwable: $t, retry #$retryCount")

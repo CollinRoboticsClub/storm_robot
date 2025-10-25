@@ -17,3 +17,9 @@ data class ArmMovementPacket(
     val wristAngle: UByte,
     val gripperAngle: UByte
 )
+
+@Serializable
+data class WebcamIdentifier(
+    val id: Int,
+    val name: String
+)
