@@ -2,16 +2,27 @@ package me.arianb.storm_robot.dashboard.cameraFeed
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import arrow.resilience.Schedule
+import arrow.resilience.retry
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.host
+import io.ktor.client.request.port
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.arianb.storm_robot.MeasureCountPerTime
 import me.arianb.storm_robot.ResilientService
+import me.arianb.storm_robot.Server
+import me.arianb.storm_robot.WebcamIdentifier
 import me.arianb.storm_robot.applyCommonHttpClientConfig
 import me.arianb.storm_robot.settings.UserPreferencesRepository
 import kotlin.time.Duration.Companion.seconds
@@ -24,11 +35,16 @@ sealed class CameraFeedState {
     class FailedToConnect(val error: Throwable) : CameraFeedState()
 }
 
+typealias WebcamIdInt = Int
+
 // TODO: verify that refactoring to use a ViewModel didn't incur a noticeable performance penalty
 class CameraFeedViewModel : ViewModel() {
-    // Camera feed state
-    private var _cameraFeedState = MutableStateFlow<CameraFeedState>(CameraFeedState.NotYetAttemptedConnection)
-    val cameraFeedState: StateFlow<CameraFeedState> = _cameraFeedState
+    data class WebcamHolder(val service: ResilientService<*>, val state: StateFlow<CameraFeedState>)
+
+    private val _availableWebcams = MutableStateFlow<List<WebcamIdentifier>>(emptyList())
+    val availableWebcams: StateFlow<List<WebcamIdentifier>> = _availableWebcams
+
+    val activeWebcamMap = mutableMapOf<WebcamIdInt, WebcamHolder>()
 
     // User preferences
     private val userPreferencesRepository = UserPreferencesRepository.getInstance()
@@ -42,45 +58,75 @@ class CameraFeedViewModel : ViewModel() {
     }
 
     init {
-        val cameraFeedZero = CameraFeed(0)
+        // Scan for available cameras on startup
+//        rescanAvailableWebcams()
+    }
 
-        val resilientService = ResilientService(
-            coroutineScope = jobCoroutineScope,
-            flow = userPreferencesFlow,
-            block = { userPreferences ->
-                _cameraFeedState.update { CameraFeedState.CurrentlyAttemptingConnection }
-                cameraFeedZero.start(
-                    client = client,
-                    host = userPreferences.serverHost,
-                    port = userPreferences.serverPort,
-                    onConnectionError = { t ->
-                        _cameraFeedState.update { CameraFeedState.FailedToConnect(t) }
-                    },
-                )
-
-                // Wait a bit before restarting
-                delay(1000)
+    fun rescanAvailableWebcams() = viewModelScope.launch(Dispatchers.Default) {
+        val response: HttpResponse = Schedule.exponential<Throwable>(1.seconds).retry {
+            client.request(Server.Endpoints.VIDEO + "/info") {
+                host = userPreferencesFlow.value.serverHost
+                port = userPreferencesFlow.value.serverPort
             }
-        )
+        }
 
-        // The frame update loop should only be run once, because it should never die.
-        // If I'm wrong about that, some more logic will need to be added
-        jobCoroutineScope.launch {
-            val profilingThing = MeasureCountPerTime(1.seconds)
-            for (frame in cameraFeedZero.frameChannel) {
-                _cameraFeedState.update { CameraFeedState.CurrentlyConnected(frame) }
-                profilingThing.check()
+        val availableWebcams: List<WebcamIdentifier> = response.body()
+
+        _availableWebcams.update { availableWebcams }
+    }
+
+    fun start(webcamId: WebcamIdInt): StateFlow<CameraFeedState> {
+        val webcamHolder: WebcamHolder = activeWebcamMap.getOrElse(webcamId) {
+            val mutableCameraFeedState = MutableStateFlow<CameraFeedState>(CameraFeedState.NotYetAttemptedConnection)
+            val cameraFeed = CameraFeed(webcamId)
+
+            val resilientService = ResilientService(
+                coroutineScope = jobCoroutineScope,
+                flow = userPreferencesFlow,
+                block = { userPreferences ->
+                    mutableCameraFeedState.update { CameraFeedState.CurrentlyAttemptingConnection }
+                    cameraFeed.start(
+                        client = client,
+                        host = userPreferences.serverHost,
+                        port = userPreferences.serverPort,
+                        onConnectionError = { t ->
+                            mutableCameraFeedState.update { CameraFeedState.FailedToConnect(t) }
+                        },
+                    )
+
+                    // Wait a bit before restarting
+                    delay(1000)
+                }
+            )
+
+            // The frame update loop should only be run once, because it should never die.
+            // If I'm wrong about that, some more logic will need to be added
+            jobCoroutineScope.launch {
+                val profilingThing = MeasureCountPerTime(1.seconds)
+                for (frame in cameraFeed.frameChannel) {
+                    mutableCameraFeedState.update { CameraFeedState.CurrentlyConnected(frame) }
+                    profilingThing.check()
+                }
             }
+
+            val webcamHolder = WebcamHolder(resilientService, mutableCameraFeedState.asStateFlow())
+            this.activeWebcamMap[webcamId] = webcamHolder
+            webcamHolder
+        }
+
+        return webcamHolder.state
+    }
+
+    fun restart(webcamId: WebcamIdInt) {
+        activeWebcamMap[webcamId]?.let {
+            it.service.restart()
         }
     }
 
-    fun restart() {
-//        job.stop()
-//        startOld()
-    }
-
-    fun stop() {
-//        job.stop()
-//        _cameraFeedState.update { CameraFeedState.StoppedConnection }
+    fun stop(webcamId: WebcamIdInt) {
+        activeWebcamMap[webcamId]?.let {
+            it.service.stop()
+//            it.state.update { CameraFeedState.StoppedConnection }
+        }
     }
 }
