@@ -51,7 +51,7 @@ private fun Route.getAvailableWebcamsInfo() = get {
 // OPTIMIZEME: the ideas now are:
 //  1. continue trying to optimize mjpeg copy latency
 //  2. switch to h264 encoding for hardware support on the Pi 4
-private fun Route.streamWebcam() = webSocket("{id}") { // FIXME: multiple video stream support
+private fun Route.streamWebcam() = webSocket("{id}") {
     return@webSocket withContext(Dispatchers.Default) {
         val id: Int by call.parameters
 
