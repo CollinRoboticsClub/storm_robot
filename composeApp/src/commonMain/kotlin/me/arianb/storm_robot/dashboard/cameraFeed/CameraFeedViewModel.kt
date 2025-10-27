@@ -59,7 +59,7 @@ class CameraFeedViewModel : ViewModel() {
 
     init {
         // Scan for available cameras on startup
-//        rescanAvailableWebcams()
+        rescanAvailableWebcams()
     }
 
     fun rescanAvailableWebcams() = viewModelScope.launch(Dispatchers.Default) {

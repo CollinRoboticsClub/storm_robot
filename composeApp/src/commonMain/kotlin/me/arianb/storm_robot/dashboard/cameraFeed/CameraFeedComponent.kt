@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -46,9 +43,7 @@ import storm_robot.composeapp.generated.resources.error
 fun CameraWindow(
     cameraFeedViewModel: CameraFeedViewModel = viewModel(),
 ) {
-    // FIXME: multiple video stream support (probably take param for camera index or something)
-
-    val availableWebcams: List<WebcamIdentifier> = remember { listOf(WebcamIdentifier(id = 0, name = "TODO")) }
+    val availableWebcams: List<WebcamIdentifier> by cameraFeedViewModel.availableWebcams.collectAsState()
 
     var selectedWebcam by remember { mutableStateOf<WebcamIdentifier?>(null) }
     CameraDropdownMenu(availableWebcams) {
@@ -68,13 +63,7 @@ fun CameraDropdownMenu(
     onWebcamSelected: (WebcamIdentifier) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val textFieldState = rememberTextFieldState(
-        if (availableWebcams.isEmpty()) {
-            "Loading..."
-        } else {
-            "Select A Camera"
-        }
-    )
+    var selectedWebcamString by remember { mutableStateOf<String?>(null) }
 
     fun WebcamIdentifier.toPrettyString(): String = "ID #${this.id}: ${this.name}"
 
@@ -90,9 +79,14 @@ fun CameraDropdownMenu(
             modifier = Modifier
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
                 .fillMaxWidth(),
-            state = textFieldState,
+            value = selectedWebcamString ?: if (availableWebcams.isEmpty()) {
+                "Loading..."
+            } else {
+                "Select A Camera"
+            },
+            onValueChange = {},
             readOnly = true,
-            lineLimits = TextFieldLineLimits.SingleLine,
+            singleLine = true,
             label = { Text("Camera List") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
@@ -106,7 +100,7 @@ fun CameraDropdownMenu(
                     },
                     onClick = {
                         expanded = false
-                        textFieldState.setTextAndPlaceCursorAtEnd(itemString)
+                        selectedWebcamString = itemString
 
                         onWebcamSelected(webcam)
                     }

@@ -6,7 +6,8 @@ import kotlin.time.TimeSource
 
 class MeasureCountPerTime(private val interval: Duration) {
     private val timeSource = TimeSource.Monotonic
-    private var currentCount = 0
+    var currentCount = 0
+        private set
     private var lastCount = 0
     private var lastMark = timeSource.markNow()
 

@@ -20,8 +20,7 @@ class CameraFeed(val id: Int) {
         client.websocketCatching(
             host = host,
             port = port,
-//            path = Server.Endpoints.VIDEO + "/${this.id}", // FIXME: implement
-            path = Server.Endpoints.VIDEO,
+            path = Server.Endpoints.VIDEO + "/${this.id}",
             onConnectionError = onConnectionError,
         ) {
             for (frame in incoming) {
