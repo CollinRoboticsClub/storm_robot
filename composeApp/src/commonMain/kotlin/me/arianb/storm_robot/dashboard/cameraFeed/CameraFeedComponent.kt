@@ -3,8 +3,11 @@ package me.arianb.storm_robot.dashboard.cameraFeed
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -41,19 +44,25 @@ import storm_robot.composeapp.generated.resources.error
 
 @Composable
 fun CameraWindow(
+    modifier: Modifier = Modifier,
     cameraFeedViewModel: CameraFeedViewModel = viewModel(),
 ) {
     val availableWebcams: List<WebcamIdentifier> by cameraFeedViewModel.availableWebcams.collectAsState()
 
     var selectedWebcam by remember { mutableStateOf<WebcamIdentifier?>(null) }
-    CameraDropdownMenu(availableWebcams) {
-        selectedWebcam = it
+
+    Box(modifier = modifier.fillMaxSize().then(modifier)) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            CameraDropdownMenu(availableWebcams) {
+                selectedWebcam = it
+            }
+
+            CameraStreamWindow(selectedWebcam?.id)
+
+            HorizontalDivider()
+            CameraFeedControls(selectedWebcam?.id)
+        }
     }
-
-    CameraStreamWindow(selectedWebcam?.id)
-
-    HorizontalDivider()
-    CameraFeedControls(selectedWebcam?.id)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

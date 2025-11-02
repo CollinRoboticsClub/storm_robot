@@ -22,7 +22,6 @@ import me.arianb.storm_robot.theme.PaddingExtraSmall
 import me.arianb.storm_robot.theme.PaddingSmall
 import me.arianb.storm_robot.theme.Typography
 
-
 @Composable
 fun DashboardScreen(contentPadding: PaddingValues) {
     val dashboardCommonPadding = Modifier.padding(all = PaddingSmall)
@@ -48,11 +47,16 @@ fun DashboardScreen(contentPadding: PaddingValues) {
 
             // Middle Column
             Column(
-                Modifier.weight(0.5f)
+                Modifier.weight(0.75f)
                     .then(dashboardCommonPadding)
             ) {
-                CameraWindow()
-                //TestThing()
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    CameraWindow(modifier = Modifier.weight(1f))
+                    CameraWindow(modifier = Modifier.weight(1f))
+                }
             }
 
             // Right Column
